@@ -1,9 +1,9 @@
 from openai import OpenAI
-from fine_tune import upload_file
 import pandas as pd
 import csv
 import time
 import math
+import argparse
 
 post = ""
 post_shap = "_shap"
@@ -82,7 +82,7 @@ def read_in_text_specific_row(file_path, start_row=0, end_row=100):
         return ''.join(lines)
 
 client = OpenAI(
-    api_key='<your openai-api key>', # replace with your own api key
+    api_key='<your-openai-api>', # replace with your own api key
 )
 
 
@@ -128,8 +128,18 @@ if __name__ == "__main__":
     data_name_ls = {0: "openmlDiabetes", 1: "gender", 2: "heart_failure", 3: "craft"}
     data_name = data_name_ls[0]  # !!!
     
-    raw_size_ls = {0: 20, 1: 50, 2: 100}
-    raw_size = raw_size_ls[1]  # !!!
+    parser = argparse.ArgumentParser(description='Input for hyperpara.')
+    parser.add_argument('--current_post', type=str, required=True, help='The current post variable name (e.g., "post_spurious_focus" or "post_imbalanced_focus")')
+    parser.add_argument('--data_name', type=str, required=True, choices=["openmlDiabetes", "gender", "heart_failure", "craft"], help='The name of the dataset (e.g., "openmlDiabetes")')
+    
+    args = parser.parse_args()
+    
+    current_post = eval(args.current_post)
+    data_name = args.data_name
+
+    
+    raw_size_ls = {"openmlDiabetes": 100, "gender": 50, "heart_failure": 50}
+    raw_size = raw_size_ls[data_name]  # !!!
     
     cut_idx5 = {0:1, 1:5, 2:6, 3:10, 4:11, 5:15, 6:16, 7:20}
     cut_idx20 = {0:1, 1:20, 2:21, 3:40, 4:41, 5:60, 6:61, 7:80}
@@ -149,16 +159,16 @@ if __name__ == "__main__":
     
     
     for rand in [1, 2, 6, 8, 42]:
-        data_path_openmlDiabetes = '../data/openmlDiabetes/openmlDiabetes_see_small_raw{}{}'.format(raw_size, current_post) + '/train_colsbase_size{}_total568_rand{}.txt'.format(raw_size, rand) 
-        data_path_heart_failure = '../data/heart_failure/heart_failure_see_small_raw{}{}'.format(raw_size, current_post) + '/train_colsbase_size{}_total199_rand{}.txt'.format(raw_size, rand)
-        data_path_gender = '../data/gender/gender_see_small_raw{}{}'.format(raw_size, current_post) + '/train_colsbase_size{}_total4001_rand{}.txt'.format(raw_size, rand)
-        data_path_craft = '../data/craft/craft_see_small_raw100{}'.format(current_post) + '/train_colsbase_size100_total600_rand{}.txt'.format(rand) 
+        data_path_openmlDiabetes = './data/openmlDiabetes/openmlDiabetes_see_small_raw{}{}'.format(raw_size, current_post) + '/train_colsbase_size{}_total568_rand{}.txt'.format(raw_size, rand) 
+        data_path_heart_failure = './data/heart_failure/heart_failure_see_small_raw{}{}'.format(raw_size, current_post) + '/train_colsbase_size{}_total199_rand{}.txt'.format(raw_size, rand)
+        data_path_gender = './data/gender/gender_see_small_raw{}{}'.format(raw_size, current_post) + '/train_colsbase_size{}_total4001_rand{}.txt'.format(raw_size, rand)
+        data_path_craft = './data/craft/craft_see_small_raw100{}'.format(current_post) + '/train_colsbase_size100_total600_rand{}.txt'.format(rand) 
         
         data_path_ls = {"openmlDiabetes": data_path_openmlDiabetes, "gender": data_path_gender, "heart_failure": data_path_heart_failure, "craft": data_path_craft}
         data_path = data_path_ls[data_name]
         # replace with your own current path
         current_data_path = data_path 
-        output_path = './synthetic/{}_raw{}_rand{}.txt'.format(data_name, raw_size, rand) # !!!
+        output_path = './gpt-api/synthetic/{}_raw{}_rand{}.txt'.format(data_name, raw_size, rand) # !!!
         
         # system instruction
         

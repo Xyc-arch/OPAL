@@ -1,6 +1,7 @@
 from meta_data import *
 import pandas as pd
 from sklearn.utils import resample
+import argparse
 
 def duplicate_synthetic_data(raw_data_path, generate_size, save_path, start_row=1, end_row=10):
     raw_data = pd.read_csv(raw_data_path)
@@ -29,6 +30,15 @@ if __name__ == "__main__":
     
     control = control_ls[1]
     data_name = data_name_ls[2]
+    
+    parser = argparse.ArgumentParser(description='Input for hyperpara.')
+    parser.add_argument('--control', type=str, required=True, help='The control (e.g., "spurious" or "imbalanced")')
+    parser.add_argument('--data_name', type=str, required=True, choices=["openmlDiabetes", "gender", "heart_failure", "craft"], help='The name of the dataset (e.g., "openmlDiabetes")')
+    
+    args = parser.parse_args()
+    
+    control = eval(args.control)
+    data_name = args.data_name
     
     if control == "imbalanced":
         info = info_dict[data_name]

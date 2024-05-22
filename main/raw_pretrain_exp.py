@@ -1,6 +1,7 @@
 
 from experiment import *
 from meta_data import *
+import argparse
 
 if __name__ == "__main__":
     
@@ -67,122 +68,7 @@ if __name__ == "__main__":
     
     elif control == "general":
         
-        ''' heart failure '''
-        # post_bootstrap = "_bootstrap"
-        # post_mixup = "_mixup"
-        # post = ""
-        # current_data_path = "../data/heart_failure/heart_failure_see_small_raw50{}".format(post_mixup)
-        # current_save_path = current_data_path
-        # target = 'DEATH_EVENT'
-        
-        # feature_cols_name = "colsbase"
-        # train_size = 50
-        # traina_size = 10
-        # trainfull_size = 199
-        # traina_num = 5
-        
-        # # rand_seed_set = [1,2,6,8,42] 
-        # rand_seed_set = [1, 2, 6, 8, 42]
-        # cols_base = uci_heart_failure_feature_cols[feature_cols_name][:-1]
-        # # 1: logistic, 2: random forest, 5: catboost
-        # method = method_list[1]
-        # print(method)
-        # cols_mean, cols_std = batch_run_rand_seed_chunk(feature_cols_name, train_size, traina_size, 
-        #                                                     trainfull_size, traina_num, rand_seed_set, cols_base, 
-        #                                                     current_data_path, current_save_path, target, method)
 
-
-
-        ''' openmlDiabetes '''
-        # data_name = "openmlDiabetes"
-        # print(data_name)
-        # # data_name = None
-        # post_bootstrap = "_bootstrap"
-        # post = ""
-        # post_mixup = "_mixup"
-        # current_data_path = "../data/openmlDiabetes/openmlDiabetes_see_small_raw100{}".format(post_imbalanced)
-        # current_save_path = current_data_path
-        # target = "class"
-        
-        # feature_cols_name = "colsbase"
-        # train_size = 100
-        # traina_size = 20
-        # trainfull_size = 568
-        # traina_num = 5
-        
-        # rand_seed_set = [1,2,6,8,42] 
-        # # rand_seed_set = [1, 2, 6, 42]
-        # cols_base = openmlDiabetes_feature_cols[feature_cols_name][:-1]
-        # # 1: logistic, 2: random forest, 5: catboocurrent_postst
-        # method = method_list[2]
-        # # traina_half_name = "select_randomForest_rand"
-        # # traina_half_name = "train_real_colsbase_rand"
-        # traina_half_name = None
-        # # fix_raw = 1
-        # fix_raw = None
-        # batch = False
-        # if batch:
-        #     for traina_half_name in traina_half_name_ls:
-        #         print("-"*50)
-        #         cols_mean, cols_std = batch_run_rand_seed_chunk(feature_cols_name, train_size, traina_size, 
-        #                                                         trainfull_size, traina_num, rand_seed_set, cols_base, 
-        #                                                         current_data_path, current_save_path, target, method, traina_half_name, data_name=data_name, fix_raw=fix_raw)
-        # else:
-        #     cols_mean, cols_std = batch_run_rand_seed_chunk(feature_cols_name, train_size, traina_size, 
-        #                                                         trainfull_size, traina_num, rand_seed_set, cols_base, 
-        #                                                         current_data_path, current_save_path, target, method, traina_half_name, data_name=data_name)
-
-
-        ''' uci breast cancer '''
-        
-        # current_data_path = "../data/uci_breast_cancer/uci_breast_cancer_see_small_raw100"
-        # current_save_path = current_data_path
-        # target = 'Class'
-        
-        # feature_cols_name = "colsbase"
-        # train_size = 50
-        # traina_size = 20
-        # trainfull_size = 186
-        # traina_num = 5
-        
-        # # rand_seed_set = [1,2,6,8,42] 
-        # rand_seed_set = [1]
-        # cols_base = uci_breast_cancer_1_feature_cols[feature_cols_name][:-1]
-        # # 1: logistic, 2: random forest, 5: catboost
-        # method = method_list[5]
-        # print(method)
-        # cols_mean, cols_std = batch_run_rand_seed_chunk(feature_cols_name, train_size, traina_size, 
-        #                                                     trainfull_size, traina_num, rand_seed_set, cols_base, 
-        #                                                     current_data_path, current_save_path, target, method)
-        
-        
-        ''' gender '''
-        # post_bootstrap = "_bootstrap"
-        # post = ""
-        # post_mixup = "_mixup"
-        # current_data_path = "../data/gender/gender_see_small_raw50{}".format(post)
-        # current_save_path = current_data_path
-        # target = 'gender'
-        
-        # feature_cols_name = "colsbase"
-        # train_size = 50
-        # traina_size = 10
-        # trainfull_size = 4001
-        # traina_num = 5
-        
-        # rand_seed_set = [1,2,6,8,42] 
-        # # rand_seed_set = [1]
-        # cols_base = gender_feature_cols[feature_cols_name][:-1]
-        # # 1: logistic, 2: random forest, 5: catboost
-        # method = method_list[2]
-        # print(method)
-        # metric = "accuracy"
-        
-        # cols_mean, cols_std = batch_run_rand_seed_chunk(feature_cols_name, train_size, traina_size, 
-        #                                                     trainfull_size, traina_num, rand_seed_set, cols_base, 
-        #                                                     current_data_path, current_save_path, target, method, metric=metric)
-        
-        
         
         dataset_name_ls = {1: "openmlDiabetes", 2: "heart_failure", 3: "gender", 4: "craft"}
         data_name = dataset_name_ls[4]
@@ -193,13 +79,16 @@ if __name__ == "__main__":
         method = method_list_class[2]
         
         
-        # for data_name in ["openmlDiabetes", "heart_failure", "gender"]:
-        #     for method in method_list_class.values():
-        #         for current_post in all_post.values():
-        #             print(50*"-")
-        #             print(data_name)
-        #             print(current_post)
-        #             print(method)
+        parser = argparse.ArgumentParser(description='Input for hyperpara.')
+        parser.add_argument('--currrent_post', type=str, required=True, choices=["post_spurious_focus", "post_imbalanced_focus", "post_spurious_duplicate", "post_imbalanced_duplicate", "post_spurious_smote", "post_imbalanced_smote"], help='The current post variable name (e.g., "post_spurious_focus" or "post_imbalanced_focus")')
+        parser.add_argument('--data_name', type=str, required=True, choices=["openmlDiabetes", "gender", "heart_failure", "craft"], help='The name of the dataset (e.g., "openmlDiabetes")')
+        parser.add_argument('--classifier', type=str, required=True, choices=["logistic", "catBoost", "randomForest"], help='The classifier you want to evaluate on.')
+        
+        args = parser.parse_args()
+        
+        control = eval(args.control)
+        data_name = args.data_name
+        method = args.classifier
                     
         info = info_dict[data_name]
         # raw_size = info["raw_size"]
@@ -211,7 +100,7 @@ if __name__ == "__main__":
         print(current_post)
         print(method)
 
-        current_data_path = "../data/{}/{}_see_small_raw{}{}".format(data_name, data_name, raw_size, current_post)
+        current_data_path = "./data/{}/{}_see_small_raw{}{}".format(data_name, data_name, raw_size, current_post)
         current_save_path = current_data_path
         target = info["target"]
         
