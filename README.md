@@ -13,49 +13,15 @@ Since we have done all data preparation for you, we do not elaborate the splits 
 
 
 
-## Setup Python Environment
 
-First, create and activate a Python virtual environment:
+## Set up Install required packages:
 
-### Windows:
+
 ```bash
-python -m venv opal
-opal\Scripts\activate
+conda env create -f environment.yml
+conda activate opal 
+conda install catboost
 ```
-
-### macOS/Linux:
-```bash
-python -m venv opal
-source opal/bin/activate
-```
-
-Install cmake for catBoost
-
-macOS
-```bash
-brew install cmake
-```
-
-Windows
-```bash
-choco install cmake
-```
-
-Linux
-```bash
-sudo apt update
-sudo apt install cmake
-```
-
-
-### Install required packages:
-
-Install python packages:
-```bash
-pip install --upgrade pip 
-pip install -r requirements.txt
-```
-
 
 
 # Generate synthetic data with GPT-4

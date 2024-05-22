@@ -80,19 +80,18 @@ if __name__ == "__main__":
         
         
         parser = argparse.ArgumentParser(description='Input for hyperpara.')
-        parser.add_argument('--currrent_post', type=str, required=True, choices=["post_spurious_focus", "post_imbalanced_focus", "post_spurious_duplicate", "post_imbalanced_duplicate", "post_spurious_smote", "post_imbalanced_smote"], help='The current post variable name (e.g., "post_spurious_focus" or "post_imbalanced_focus")')
+        parser.add_argument('--current_post', type=str, required=True, choices=["post_spurious_focus", "post_imbalanced_focus", "post_spurious_duplicate", "post_imbalanced_duplicate", "post_spurious_smote", "post_imbalanced_smote"], help='The current post variable name (e.g., "post_spurious_focus" or "post_imbalanced_focus")')
         parser.add_argument('--data_name', type=str, required=True, choices=["openmlDiabetes", "gender", "heart_failure", "craft"], help='The name of the dataset (e.g., "openmlDiabetes")')
         parser.add_argument('--classifier', type=str, required=True, choices=["logistic", "catBoost", "randomForest"], help='The classifier you want to evaluate on.')
         
         args = parser.parse_args()
         
-        control = eval(args.control)
+        current_post = eval(args.current_post)
         data_name = args.data_name
         method = args.classifier
                     
         info = info_dict[data_name]
-        # raw_size = info["raw_size"]
-        raw_size = 100
+        raw_size = info["raw_size"]
         trainfull_size = info["total_size"]
 
         print("-"*30)
