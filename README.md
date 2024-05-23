@@ -4,6 +4,8 @@ This repository contains the code for the paper titled "Synthetic Oversampling: 
 
 Since we have done all data preparation for you, we defer the splits (`split.py`, `specific_size_split.py`), the classifier tuning (`tune.py`), and data conversion for LLM seed data (`context2table.py`, `table2context.py`) in `./main` folder after the synthetic data generation and evaluation.
 
+To run command lines provided, make sure you are in the `root` directory.
+
 
 ## Repository Structure
 
