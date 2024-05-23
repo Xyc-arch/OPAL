@@ -17,6 +17,7 @@ from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from scipy.stats import randint, uniform
 import matplotlib.pyplot as plt
 import statistics
+import argparse
 
 def calculate_proportions(data_file, target_name, attribute_name):
     data = pd.read_csv(data_file)
@@ -438,10 +439,9 @@ def get_min_average(df, row_idx = 5):
     return row_min, row_avg
 
 
-def batch_run_rand_seed_chunk_spurious(minority_associate, spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, data_path, save_path, target, method="linear", traina_half_name = None, data_name = None, fix_raw = None, metric="accuracy", minority_gate = True):
+def batch_run_rand_seed_chunk_spurious(minority_associate, spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, data_path, save_path, target, method="linear", traina_half_name = None, data_name = None, fix_raw = None, metric="accuracy", minority_gate = True, class_error = None):
    
     record = []
-    print("The traina name is {}".format(traina_half_name))
       
     for rand_seed in rand_seed_set:
         if fix_raw:
@@ -472,29 +472,27 @@ def batch_run_rand_seed_chunk_spurious(minority_associate, spurious_attr, featur
     for index, row in df_record_to_csv.iterrows():
         row_as_list = list(row.values)
         formatted_row = "[" + ", ".join(repr(e) for e in row_as_list) + "]"
-        print(f"Row {index}: {formatted_row}")
+        if index <= 4:
+            print(f"Row {index}: {formatted_row}")
+        elif index == 5:
+            print(f"Mean: {formatted_row}")
+            Mean = formatted_row
+        elif index == 6:
+            print(f"Std: {formatted_row}")
+            Std = formatted_row
     # print(df_record_to_csv)
     print("min: {}, mean: {}".format(df_avg_min, df_avg_mean))
-    df_record_to_csv.to_csv(save_path + 
-                     "/perform_train_{}_size{}_total{}_addnum{}_{}.csv".format(feature_cols_name, train_size, trainfull_size, traina_num, method))
     
-    plt.figure("mean")
-    x_axis =[x for x in range(traina_num+1)]
-    plt.errorbar(x_axis, col_mean, yerr=col_std, fmt='-o', capsize=5)
-    plt.axhline(y = col_mean[0], color = 'r', linestyle = '-') 
-    plt.xlabel('add num')
-    plt.ylabel('error')
-    save_name = "/{}_train_{}_size{}_total{}_addnum{}_{}".format("mean", feature_cols_name, train_size, trainfull_size, traina_num, method)
-    plt.title("{} on {}".format(method, target))
-    plt.savefig(save_path + save_name + '.png')
+    with open(f"{save_path}/{class_error}_{method}_{data_name}.txt", 'w') as f:
+        f.write(f"Mean: {Mean}\n")
+        f.write(f"Std: {Std}\n")
     
     return col_mean, col_std
 
 
-def batch_run_rand_seed_chunk_spurious_worst(minority_associate, spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, data_path, save_path, target, method="linear", traina_half_name = None, data_name = None, fix_raw = None, metric="accuracy", minority_gate = True):
+def batch_run_rand_seed_chunk_spurious_worst(minority_associate, spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, data_path, save_path, target, method="linear", traina_half_name = None, data_name = None, fix_raw = None, metric="accuracy", minority_gate = True, class_error = None):
    
     record = []
-    print("The traina name is {}".format(traina_half_name))
       
     for rand_seed in rand_seed_set:
         if fix_raw:
@@ -525,19 +523,27 @@ def batch_run_rand_seed_chunk_spurious_worst(minority_associate, spurious_attr, 
     for index, row in df_record_to_csv.iterrows():
         row_as_list = list(row.values)
         formatted_row = "[" + ", ".join(repr(e) for e in row_as_list) + "]"
-        print(f"Row {index}: {formatted_row}")
-    # print(df_record_to_csv)
+        if index <= 4:
+            print(f"Row {index}: {formatted_row}")
+        elif index == 5:
+            print(f"Mean: {formatted_row}")
+            Mean = formatted_row
+        elif index == 6:
+            print(f"Std: {formatted_row}")
+            Std = formatted_row
     print("min: {}, mean: {}".format(df_avg_min, df_avg_mean))
     
+    with open(f"{save_path}/{class_error}_{method}_{data_name}.txt", 'w') as f:
+        f.write(f"Mean: {Mean}\n")
+        f.write(f"Std: {Std}\n")
     return col_mean, col_std
 
 
 
 
-def batch_run_rand_seed_chunk_spurious_diff(spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, data_path, save_path, target, method="linear", traina_half_name = None, data_name = None, fix_raw = None, metric="accuracy"):
+def batch_run_rand_seed_chunk_spurious_diff(spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, data_path, save_path, target, method="linear", traina_half_name = None, data_name = None, fix_raw = None, metric="accuracy", class_error = None):
    
     record = []
-    print("The traina name is {}".format(traina_half_name))
       
     for rand_seed in rand_seed_set:
         if fix_raw:
@@ -568,10 +574,18 @@ def batch_run_rand_seed_chunk_spurious_diff(spurious_attr, feature_cols_name, tr
     for index, row in df_record_to_csv.iterrows():
         row_as_list = list(row.values)
         formatted_row = "[" + ", ".join(repr(e) for e in row_as_list) + "]"
-        print(f"Row {index}: {formatted_row}")
-    # print(df_record_to_csv)
+        if index <= 4:
+            print(f"Row {index}: {formatted_row}")
+        elif index == 5:
+            print(f"Mean: {formatted_row}")
+            Mean = formatted_row
+        elif index == 6:
+            print(f"Std: {formatted_row}")
+            Std = formatted_row
     print("min: {}, mean: {}".format(df_avg_min, df_avg_mean))
-    
+    with open(f"{save_path}/{class_error}_{method}_{data_name}.txt", 'w') as f:
+        f.write(f"Mean: {Mean}\n")
+        f.write(f"Std: {Std}\n")
     return col_mean, col_std
 
 
@@ -583,87 +597,209 @@ if __name__ == "__main__":
     dataset_name_ls = {0: "openmlDiabetes", 1: "heart_failure", 2: "gender"}
     spurious_attr_ls = {"openmlDiabetes": "skin", "heart_failure": "sex", "gender": "long_hair"}
     feature_cols_ls = {"openmlDiabetes": openmlDiabetes_feature_cols, "heart_failure": uci_heart_failure_feature_cols, "gender": gender_feature_cols}
-    post_ls = {0: post_spurious_duplicate, 1: post_spurious, 2: post_spurious_focus}
+    post_ls = {0: post_spurious_duplicate, 1: post_spurious_smote, 2: post_spurious_focus}
     method_list = {0: "logistic", 1: "catBoost", 2: "randomForest"}
-    
-    # !!!
-    current_method = method_list[2]
-    dataset_name = dataset_name_ls[2]
-    current_post = post_ls[2]
-    minority_gate = -1
-    
-    info = info_dict[dataset_name]
-    raw_size = info["raw_size"]
-    file_size = info["file_size"]
-    test_size = info["test_size"]
-    cols_base = info["colsbase"]
+    minority_gate_ls = {0: 0, 1: 1, 2: -1}
     
     
+    parser = argparse.ArgumentParser(description='Input for hyperpara.')
+    parser.add_argument('--current_post', type=str, required=True, choices=["post_spurious_focus", "post_imbalanced_focus", "post_spurious_duplicate", "post_imbalanced_duplicate", "post_spurious_smote", "post_imbalanced_smote", "all"], help='The current post variable name (e.g., "post_spurious_focus" or "post_imbalanced_focus")')
+    parser.add_argument('--data_name', type=str, required=True, choices=["openmlDiabetes", "gender", "heart_failure", "craft"], help='The name of the dataset (e.g., "openmlDiabetes")')
+    parser.add_argument('--classifier', type=str, required=True, choices=["logistic", "catBoost", "randomForest"], help='The classifier you want to evaluate on.')
+    parser.add_argument('--control', type=str, required=True, choices=["aug", "diff", "worst", "all"], help='control the whole spurious correlation experiments')
+    parser.add_argument('--gate', type=str, required=True, choices=["0", "1", "-1"], help='control the whole spurious correlation experiments')
     
-    split_name_ls = {"openmlDiabetes": "diabetes", "gender": "gender", "heart_failure": "heart_failure", "gender": "gender"}
-    associate_ls = {"openmlDiabetes": 1, "heart_failure": 1, "gender": 1}
-    major_size_ls = {"openmlDiabetes": 45, "heart_failure": 20, "gender": 20}
-    minor_size_ls = {"openmlDiabetes": 5, "heart_failure": 5, "gender": 5}
+    args = parser.parse_args()
     
-    current_parent_path = "../data/{}/{}_see_small_raw{}{}".format(dataset_name, dataset_name, raw_size, current_post) #!!!
-    feature_cols_name = "colsbase"
+    current_save_path = "./main/results"
     
+    control = args.control
     
-    target = info["target"]
-    spurious_attr = spurious_attr_ls[dataset_name]
-    associate = associate_ls[dataset_name]
-    major_size = major_size_ls[dataset_name]
-    minor_size = minor_size_ls[dataset_name]
-    feature_cols = feature_cols_ls[dataset_name]
-    
-    split_file = "/{}.csv".format(split_name_ls[dataset_name])
-    
-    rand_seed = 42
-    
-    if control == "try":
-        split_file_abs_path = current_parent_path + split_file
-        feature_target_correlation(split_file_abs_path, target)
-        calculate_proportions(split_file_abs_path, target, spurious_attr)
+    if control != "all":
+        method = args.classifier
+        
+        
+        current_method = method
+        dataset_name = args.data_name
+        control = args.control
+        current_post = eval(args.current_post)
+        minority_gate = eval(args.gate)
+        
+        print(50*'-')
+        print(current_post)
+        print(dataset_name)
+        
+        info = info_dict[dataset_name]
+        raw_size = info["raw_size"]
+        file_size = info["file_size"]
+        test_size = info["test_size"]
+        cols_base = info["colsbase"]
+        
+        
+        
+        split_name_ls = {"openmlDiabetes": "diabetes", "gender": "gender", "heart_failure": "heart_failure", "gender": "gender"}
+        associate_ls = {"openmlDiabetes": 1, "heart_failure": 1, "gender": 1}
+        major_size_ls = {"openmlDiabetes": 45, "heart_failure": 20, "gender": 20}
+        minor_size_ls = {"openmlDiabetes": 5, "heart_failure": 5, "gender": 5}
+        
+        current_parent_path = "./data/{}/{}_see_small_raw{}{}".format(dataset_name, dataset_name, raw_size, current_post) #!!!
+        feature_cols_name = "colsbase"
+        
+        
+        target = info["target"]
+        spurious_attr = spurious_attr_ls[dataset_name]
+        associate = associate_ls[dataset_name]
+        major_size = major_size_ls[dataset_name]
+        minor_size = minor_size_ls[dataset_name]
+        feature_cols = feature_cols_ls[dataset_name]
+        
+        split_file = "/{}.csv".format(split_name_ls[dataset_name])
+        
+        rand_seed = 42
+        
+        if control == "try":
+            split_file_abs_path = current_parent_path + split_file
+            feature_target_correlation(split_file_abs_path, target)
+            calculate_proportions(split_file_abs_path, target, spurious_attr)
 
-    elif control == "split":
-        rand_seed_set = [1, 2, 6, 8, 42]
-        spurious_split_rand(feature_cols, feature_cols_name, current_parent_path, split_file, target, spurious_attr, associate, file_size, test_size, rand_seed_set, major_size, minor_size)
-        
-        
-    elif control == "aug":
-        minority_associate = abs(1-associate)
-        rand_seed_set = [1, 2, 6, 8, 42]
-        current_save_path = current_parent_path
-        target = info["target"]
-        
-        feature_cols_name = "colsbase"
-        train_size = info["raw_size"]
-        traina_size = int(train_size/5)
-        trainfull_size = info["total_size"]
-        traina_num = 5
-        batch_run_rand_seed_chunk_spurious(minority_associate, spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, current_parent_path, current_save_path, target, method=current_method, traina_half_name = None, data_name = None, fix_raw = None, metric="accuracy", minority_gate=minority_gate)
+        elif control == "split":
+            rand_seed_set = [1, 2, 6, 8, 42]
+            spurious_split_rand(feature_cols, feature_cols_name, current_parent_path, split_file, target, spurious_attr, associate, file_size, test_size, rand_seed_set, major_size, minor_size)
+            
+            
+        elif control == "aug":
+            minority_associate = abs(1-associate)
+            rand_seed_set = [1, 2, 6, 8, 42]
+            target = info["target"]
+            
+            feature_cols_name = "colsbase"
+            train_size = info["raw_size"]
+            traina_size = int(train_size/5)
+            trainfull_size = info["total_size"]
+            traina_num = 5
+            class_error = None
+            if minority_gate == 0:
+                class_error = "overall"
+            elif minority_gate == 1:
+                class_error = "minority"
+            elif minority_gate == -1:
+                class_error = "majority"
+            print(class_error)
+            batch_run_rand_seed_chunk_spurious(minority_associate, spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, current_parent_path, current_save_path, target, method=current_method, traina_half_name = None, data_name = dataset_name, fix_raw = None, metric="accuracy", minority_gate=minority_gate, class_error=class_error)
 
-    elif control == "diff":
-        target = info["target"]
-        rand_seed_set = [1, 2, 6, 8, 42]
-        feature_cols_name = "colsbase"
-        train_size = info["raw_size"]
-        traina_size = int(train_size/5)
-        trainfull_size = info["total_size"]
-        current_save_path = current_parent_path
-        traina_num = 5
-        batch_run_rand_seed_chunk_spurious_diff(spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, current_parent_path, current_save_path, target, method=current_method, traina_half_name = None, data_name = None, fix_raw = None, metric="accuracy")
-        
-        
-    elif control == "worst":
-        minority_associate = abs(1-associate)
-        rand_seed_set = [1, 2, 6, 8, 42]
-        current_save_path = current_parent_path
-        target = info["target"]
-        
-        feature_cols_name = "colsbase"
-        train_size = info["raw_size"]
-        traina_size = int(train_size/5)
-        trainfull_size = info["total_size"]
-        traina_num = 5
-        batch_run_rand_seed_chunk_spurious_worst(minority_associate, spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, current_parent_path, current_save_path, target, method=current_method, traina_half_name = None, data_name = None, fix_raw = None, metric="accuracy", minority_gate=minority_gate)
+        elif control == "diff":
+            target = info["target"]
+            rand_seed_set = [1, 2, 6, 8, 42]
+            feature_cols_name = "colsbase"
+            train_size = info["raw_size"]
+            traina_size = int(train_size/5)
+            trainfull_size = info["total_size"]
+            traina_num = 5
+            print("diff")
+            batch_run_rand_seed_chunk_spurious_diff(spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, current_parent_path, current_save_path, target, method=current_method, traina_half_name = None, data_name = dataset_name, fix_raw = None, metric="accuracy", class_error="diff")
+            
+            
+        elif control == "worst":
+            minority_associate = abs(1-associate)
+            rand_seed_set = [1, 2, 6, 8, 42]
+            target = info["target"]
+            
+            feature_cols_name = "colsbase"
+            train_size = info["raw_size"]
+            traina_size = int(train_size/5)
+            trainfull_size = info["total_size"]
+            traina_num = 5
+            print("worst")
+            batch_run_rand_seed_chunk_spurious_worst(minority_associate, spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, current_parent_path, current_save_path, target, method=current_method, traina_half_name = None, data_name = dataset_name, fix_raw = None, metric="accuracy", minority_gate=minority_gate, class_error = "worst")
+
+    else:
+        dataset_name_ls = {0: "openmlDiabetes", 1: "heart_failure", 2: "gender"}
+        spurious_attr_ls = {"openmlDiabetes": "skin", "heart_failure": "sex", "gender": "long_hair"}
+        feature_cols_ls = {"openmlDiabetes": openmlDiabetes_feature_cols, "heart_failure": uci_heart_failure_feature_cols, "gender": gender_feature_cols}
+        post_ls = {0: post_spurious_duplicate, 1: post_spurious_smote, 2: post_spurious_focus}
+        method_list = {0: "logistic", 1: "catBoost", 2: "randomForest"}
+        minority_gate_ls = [0, 1, -1]
+        for control in ["diff", "worst", "aug"]:
+            for data_name in dataset_name_ls.values():
+                for current_post in post_ls.values():
+                    for current_method in method_list.values():
+                        for minority_gate in minority_gate_ls:
+                            print("-"*50)
+                            dataset_name = data_name
+                            info = info_dict[dataset_name]
+                            raw_size = info["raw_size"]
+                            file_size = info["file_size"]
+                            test_size = info["test_size"]
+                            cols_base = info["colsbase"]
+                            
+                            print(dataset_name)
+                            print(current_post)
+                            print(current_method)
+                            
+                            split_name_ls = {"openmlDiabetes": "diabetes", "gender": "gender", "heart_failure": "heart_failure", "gender": "gender"}
+                            associate_ls = {"openmlDiabetes": 1, "heart_failure": 1, "gender": 1}
+                            major_size_ls = {"openmlDiabetes": 45, "heart_failure": 20, "gender": 20}
+                            minor_size_ls = {"openmlDiabetes": 5, "heart_failure": 5, "gender": 5}
+                            
+                            current_parent_path = "./data/{}/{}_see_small_raw{}{}".format(dataset_name, dataset_name, raw_size, current_post) #!!!
+                            feature_cols_name = "colsbase"
+                            
+                            
+                            target = info["target"]
+                            spurious_attr = spurious_attr_ls[dataset_name]
+                            associate = associate_ls[dataset_name]
+                            major_size = major_size_ls[dataset_name]
+                            minor_size = minor_size_ls[dataset_name]
+                            feature_cols = feature_cols_ls[dataset_name]
+                            
+                            split_file = "/{}.csv".format(split_name_ls[dataset_name])
+                            
+                            
+                            if control == "diff":
+                                target = info["target"]
+                                rand_seed_set = [1, 2, 6, 8, 42]
+                                feature_cols_name = "colsbase"
+                                train_size = info["raw_size"]
+                                traina_size = int(train_size/5)
+                                trainfull_size = info["total_size"]
+                                traina_num = 5
+                                print("diff")
+                                batch_run_rand_seed_chunk_spurious_diff(spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, current_parent_path, current_save_path, target, method=current_method, traina_half_name = None, data_name = dataset_name, fix_raw = None, metric="accuracy", class_error="diff")
+            
+                            elif control == "worst":
+                                minority_associate = abs(1-associate)
+                                rand_seed_set = [1, 2, 6, 8, 42]
+                                target = info["target"]
+                                
+                                feature_cols_name = "colsbase"
+                                train_size = info["raw_size"]
+                                traina_size = int(train_size/5)
+                                trainfull_size = info["total_size"]
+                                traina_num = 5
+                                print("worst")
+                                batch_run_rand_seed_chunk_spurious_worst(minority_associate, spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, current_parent_path, current_save_path, target, method=current_method, traina_half_name = None, data_name = dataset_name, fix_raw = None, metric="accuracy", minority_gate=minority_gate, class_error = "worst")
+                                
+                            elif control == "aug":
+                                minority_associate = abs(1-associate)
+                                rand_seed_set = [1, 2, 6, 8, 42]
+                                target = info["target"]
+                                
+                                feature_cols_name = "colsbase"
+                                train_size = info["raw_size"]
+                                traina_size = int(train_size/5)
+                                trainfull_size = info["total_size"]
+                                traina_num = 5
+                                class_error = None
+                                if minority_gate == 0:
+                                    class_error = "overall"
+                                elif minority_gate == 1:
+                                    class_error = "minority"
+                                elif minority_gate == -1:
+                                    class_error = "majority"
+                                print(class_error)
+                                batch_run_rand_seed_chunk_spurious(minority_associate, spurious_attr, feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, current_parent_path, current_save_path, target, method=current_method, traina_half_name = None, data_name = dataset_name, fix_raw = None, metric="accuracy", minority_gate=minority_gate, class_error=class_error)
+
+
+                            
+                            
+                            

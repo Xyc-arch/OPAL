@@ -72,7 +72,7 @@ def get_min_average(df, row_idx = 5):
     
     return row_min, row_avg
 
-def batch_run_rand_seed_chunk(feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, data_path, save_path, target, method="linear", traina_half_name = None, data_name = None, fix_raw = None, metric="accuracy"):
+def batch_run_rand_seed_chunk(feature_cols_name, train_size, traina_size, trainfull_size, traina_num, rand_seed_set, cols_base, data_path, save_path, target, method="linear", traina_half_name = None, data_name = None, fix_raw = None, metric="accuracy", current_post = None):
    
     record = []
     
@@ -104,6 +104,8 @@ def batch_run_rand_seed_chunk(feature_cols_name, train_size, traina_size, trainf
     record.append(col_std)
     df_record_to_csv = pd.DataFrame(record)
     df_avg_min, df_avg_mean = get_min_average(df_record_to_csv, row_idx=len(rand_seed_set))
+    Mean = None
+    Std = None
     for index, row in df_record_to_csv.iterrows():
         row_as_list = list(row.values)
         formatted_row = "[" + ", ".join(repr(e) for e in row_as_list) + "]"
@@ -111,32 +113,16 @@ def batch_run_rand_seed_chunk(feature_cols_name, train_size, traina_size, trainf
             print(f"Row {index}: {formatted_row}")
         elif index == 5:
             print(f"Mean: {formatted_row}")
+            Mean = formatted_row
         elif index == 6:
             print(f"Std: {formatted_row}")
+            Std = formatted_row
     # print(df_record_to_csv)
     print("min: {}, mean: {}".format(df_avg_min, df_avg_mean))
-    df_record_to_csv.to_csv(save_path + 
-                     "/perform_train_{}_size{}_total{}_addnum{}_{}.csv".format(feature_cols_name, train_size, trainfull_size, traina_num, method))
     
-    plt.figure("mean")
-    x_axis =[x for x in range(traina_num+1)]
-    plt.errorbar(x_axis, col_mean, yerr=col_std, fmt='-o', capsize=5)
-    plt.axhline(y = col_mean[0], color = 'r', linestyle = '-') 
-    plt.xlabel('add num')
-    plt.ylabel('error')
-    save_name = "/{}_train_{}_size{}_total{}_addnum{}_{}".format("mean", feature_cols_name, train_size, trainfull_size, traina_num, method)
-    plt.title("{} on {}".format(method, target))
-    plt.savefig(save_path + save_name + '.png')
-    
-    
-    plt.figure("std")
-    x_axis =[x for x in range(traina_num+1)]
-    plt.bar(x_axis, col_std)
-    plt.xlabel('add num')
-    plt.ylabel('accuracy')
-    save_name = "/{}_train_{}_size{}_total{}_addnum{}_{}".format("std", feature_cols_name, train_size, trainfull_size, traina_num, method)
-    plt.title("{} on {}".format(method, target))
-    plt.savefig(save_path + save_name + '.png')
+    with open(f"{save_path}/{current_post}_{method}_{data_name}.txt", 'w') as f:
+        f.write(f"Mean: {Mean}\n")
+        f.write(f"Std: {Std}\n")
         
         
     return col_mean, col_std

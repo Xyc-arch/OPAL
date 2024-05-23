@@ -18,6 +18,7 @@ post_imbalanced_smote = "_imbalanced_smote"
 post_imbalanced_focus = "_imbalanced_focus"
 post_spurious_duplicate = "_spurious_duplicate"
 post_spurious_focus = "_spurious_focus"
+post_spurious_smote = "_spurious_smote"
 
 # train = pd.read_csv(current_path + 'heart_data/train.csv')
 # traina = pd.read_csv(current_path + 'heart_data/traina.csv')
