@@ -107,7 +107,12 @@ def batch_run_rand_seed_chunk(feature_cols_name, train_size, traina_size, trainf
     for index, row in df_record_to_csv.iterrows():
         row_as_list = list(row.values)
         formatted_row = "[" + ", ".join(repr(e) for e in row_as_list) + "]"
-        print(f"Row {index}: {formatted_row}")
+        if index <= 4:
+            print(f"Row {index}: {formatted_row}")
+        elif index == 5:
+            print(f"Mean: {formatted_row}")
+        elif index == 6:
+            print(f"Std: {formatted_row}")
     # print(df_record_to_csv)
     print("min: {}, mean: {}".format(df_avg_min, df_avg_mean))
     df_record_to_csv.to_csv(save_path + 
