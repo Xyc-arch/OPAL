@@ -8,7 +8,9 @@ Since we have done all data preparation for you, we do not defer the splits (`sp
 ## Repository Structure
 
 - **data/**: This folder houses all datasets, including splits and the synthetic data generated for the experiments.
+
 - **gpt-api/**: Contains scripts for utilizing GPT-4 Turbo to generate synthetic data.
+
 - **main/**: Includes all necessary code to reproduce the figures and tables presented in the paper.
 
 
@@ -61,6 +63,7 @@ python gpt-api/new_prompt.py --current_post post_spurious_focus --data_name gend
 You can use the following command to generate synthetic data for both classification and spurious correlations by SMOTE.
 
 -**control**: spurious (for spurious correlations) or imbalanced (for imbalanced classification).
+
 -**data_name**: openmlDiabetes, heart_failure, gender, craft (control=imbalanced)
 
 ## Imbalanced class
@@ -79,6 +82,7 @@ python main/imbalanced_spurious_smote.py --control post_spurious_focus --data_na
 You can use the following command to generate synthetic data for both classification and spurious correlations by duplication.
 
 -**control**: spurious (for spurious correlations) or imbalanced (for imbalanced classification).
+
 -**data_name**: openmlDiabetes, heart_failure, gender.
 
 ## Imbalanced class
@@ -109,6 +113,7 @@ python main/raw_pretrain_exp.py --current_post post_imbalanced_focus --data_name
 ```
 
 -**current_post**: post_imbalanced_focus (for OPAL), post_imbalanced_duplicate (for duplication), post_imbalanced_smote (for SMOTE), all (for all evaluation of imbalanced classification)
+
 -**data_name**: openmlDiabetes, heart_failure, gender, craft
 
 After running this program with one specific choice, you will see the output in the format
@@ -151,9 +156,13 @@ python main/spurious.py --current_post post_spurious_focus --data_name gender --
 ```
 
 -**current_post**: post_spurious_focus (for OPAL), post_spurious_smote (for smote), post_spurious_duplicate (for duplication)
+
 -**classifier**: logistic, catBoost, randomForest
+
 -**data_name**: openmlDiabetes, heart_failure, gender
+
 -**control**: aug (for minority, majority, and overall), diff (maximum absolute difference among groups), worst (worst group error)
+
 -**gate** (minority gate to control minority, majority, or overall): 1 (for minority), -1 (for majority), 0 (for overall)
 
 
