@@ -2,7 +2,7 @@
 
 This repository contains the code for the paper titled "Synthetic Oversampling: Theory and A Practical Approach Using LLMs to Address Data Imbalance", specifically the algorithm OPAL (OversamPling with Artificial LLM-generated data).
 
-Since we have done all data preparation for you, we do not defer the splits (`split.py`, `specific_size_split.py`), the classifier tuning (`tune.py`), and data conversion for LLM seed data (`context2table.py`, `table2context.py`) in `./main` folder after the synthetic data generation and evaluation.
+Since we have done all data preparation for you, we defer the splits (`split.py`, `specific_size_split.py`), the classifier tuning (`tune.py`), and data conversion for LLM seed data (`context2table.py`, `table2context.py`) in `./main` folder after the synthetic data generation and evaluation.
 
 
 ## Repository Structure
